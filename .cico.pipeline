@@ -16,6 +16,14 @@ def notifyBuild(String buildStatus = 'STARTED') {
 }
 
 node('odo') {
+
+            properties([
+                parameters([
+                    string(defaultValue: "", description: "", name: "REPO"),
+                    string(defaultValue: "", description: "", name: "BRANCH"),
+                ])
+            ])
+
             stage('Allocate Node'){
                 env.CICO_API_KEY = readFile("${env.HOME}/duffy.key").trim()
                 duffy_rtn=sh(
@@ -24,8 +32,6 @@ node('odo') {
                     ).trim().tokenize(' ')
                 env.DUFFY_NODE=duffy_rtn[0]
                 env.SSID=duffy_rtn[1]
-                env.BRANCH=params.BRANCH
-                env.REPO=params.REPO
                 env.CLONE_DIR = 'go/src/github.com/redhat-developer/odo'
             }
     
